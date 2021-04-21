@@ -28,6 +28,8 @@ public class MoneyService {
     @Autowired
     OutcomeRepository outcomeRepository;
 
+    
+
     //TRANSFER MONEY
     public ApiResponse moneyTransfer(TransferDto transferDto) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
