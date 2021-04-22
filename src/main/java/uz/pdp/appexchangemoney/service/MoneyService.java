@@ -9,6 +9,7 @@ import uz.pdp.appexchangemoney.entity.Card;
 import uz.pdp.appexchangemoney.entity.Income;
 import uz.pdp.appexchangemoney.entity.Outcome;
 import uz.pdp.appexchangemoney.payload.ApiResponse;
+import uz.pdp.appexchangemoney.payload.CardDto;
 import uz.pdp.appexchangemoney.payload.TransferDto;
 import uz.pdp.appexchangemoney.repository.CardRepository;
 import uz.pdp.appexchangemoney.repository.IncomeRepository;
@@ -28,7 +29,35 @@ public class MoneyService {
     @Autowired
     OutcomeRepository outcomeRepository;
 
-    
+
+    //ADD CARD
+    public ApiResponse addCard(CardDto cardDto){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+
+        if (new Date().after(cardDto.getExpireDate()))
+            return new ApiResponse("karta amal qilish muddati o'tgan",false);
+
+        Card card = new Card();
+        card.setNumber(cardDto.getNumber());
+        card.setExpireDate(cardDto.getExpireDate());
+
+        //BU TRANSFER PAYTIDA KARTA SHU USERGA TEGISHLIMI YOKI YOQMI BILISH UCHUN QILINDI
+        card.setUsername(username);
+
+        //HOZIRCHA KARTAGA 200_000 PUL SOLIB QO'YAMIZ ICHIDAGI PULNI AVTOMATIK ANIQLASH IMKONIYATI YO'QLIGI SABABLI
+        card.setBalance(200000d);
+        cardRepository.save(card);
+        return new ApiResponse("Karta muvaffaqiyatli saqlandi",true);
+    }
+
+
 
     //TRANSFER MONEY
     public ApiResponse moneyTransfer(TransferDto transferDto) {

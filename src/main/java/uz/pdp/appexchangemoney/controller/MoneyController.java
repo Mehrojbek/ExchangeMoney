@@ -3,7 +3,9 @@ package uz.pdp.appexchangemoney.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.appexchangemoney.entity.Card;
 import uz.pdp.appexchangemoney.payload.ApiResponse;
+import uz.pdp.appexchangemoney.payload.CardDto;
 import uz.pdp.appexchangemoney.payload.TransferDto;
 import uz.pdp.appexchangemoney.service.MoneyService;
 
@@ -15,6 +17,14 @@ import java.util.List;
 public class MoneyController {
     @Autowired
     MoneyService moneyService;
+
+
+    @PostMapping("/addCard")
+    public  ResponseEntity<?> addCard(@RequestBody CardDto cardDto){
+        ApiResponse apiResponse = moneyService.addCard(cardDto);
+        return ResponseEntity.status(apiResponse.isSuccess()?201:409).body(apiResponse);
+    }
+
 
     @PostMapping("/transfer")
     public ResponseEntity<?> moneyTransfer(@RequestBody @Valid TransferDto transferDto){
