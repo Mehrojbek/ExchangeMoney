@@ -18,10 +18,15 @@ import uz.pdp.appexchangemoney.service.AuthService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
+    final
     AuthService authService;
-    @Autowired
+    final
     JwtFilter jwtFilter;
+
+    public SecurityConfig(AuthService authService, JwtFilter jwtFilter) {
+        this.authService = authService;
+        this.jwtFilter = jwtFilter;
+    }
 
 
     @Override
