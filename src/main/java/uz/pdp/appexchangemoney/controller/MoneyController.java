@@ -15,16 +15,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/money")
 public class MoneyController {
-    @Autowired
+    final
     MoneyService moneyService;
 
+    public MoneyController(MoneyService moneyService) {
+        this.moneyService = moneyService;
+    }
 
     @PostMapping("/addCard")
     public  ResponseEntity<?> addCard(@RequestBody CardDto cardDto){
         ApiResponse apiResponse = moneyService.addCard(cardDto);
         return ResponseEntity.status(apiResponse.isSuccess()?201:409).body(apiResponse);
     }
-
 
     @PostMapping("/transfer")
     public ResponseEntity<?> moneyTransfer(@RequestBody @Valid TransferDto transferDto){
